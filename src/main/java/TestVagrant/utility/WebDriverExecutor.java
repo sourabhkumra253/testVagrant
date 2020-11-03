@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class Executor {
+public class WebDriverExecutor {
 	
 	public static WebDriver driver;
 	
@@ -15,6 +15,8 @@ public class Executor {
 			driver = new ChromeDriver();
 			driver.manage().window().maximize();
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			driver.navigate().to(Constants.URL);
+
 		}
 		
 		
