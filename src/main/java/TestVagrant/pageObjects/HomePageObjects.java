@@ -6,11 +6,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class HomePageObjects {
+import TestVagrant.utility.PageObjectBaseClass;
+
+public class HomePageObjects extends PageObjectBaseClass {
 	
-	WebDriver driver;
 	public HomePageObjects(WebDriver driver) {
-		this.driver= driver;
+		super(driver);
 	}
 
 	private By newsAlertPopup = By.xpath("//a[contains(text(),'No Thanks')]");
@@ -18,16 +19,16 @@ public class HomePageObjects {
 	private By weatherLink = By.xpath("//a[contains(text(),'WEATHER')]");
 
 	public void clickOnNewsAlertPopup() {
-		driver.findElement(newsAlertPopup).click();
+		this.getDriver().findElement(newsAlertPopup).click();
 
 	}
 
 	public void clickOnSubMenuDots() {
-		driver.findElement(subMenuDots).click();
+		this.getDriver().findElement(subMenuDots).click();
 	}
 
 	public void clickOnWeatherLink() {
-		driver.findElement(weatherLink).click();
+		this.getDriver().findElement(weatherLink).click();
 	}
 	
 	public By getnewsAlertPopup() {
@@ -35,7 +36,7 @@ public class HomePageObjects {
 	}
 	
 	public void waitForElement(By locator) {
-		WebDriverWait wait = new WebDriverWait(driver, 20);
+		WebDriverWait wait = new WebDriverWait(this.getDriver(), 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 	}
 }
