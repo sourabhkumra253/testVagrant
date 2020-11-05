@@ -3,6 +3,7 @@ package TestVagrant.E2ETests;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -23,6 +24,7 @@ public class E2EWebApiTestsClass extends TestsBaseClass {
 	int TemperatureMaxThreshold = Integer.parseInt(PropertyFileReader.getConfigProperty("TEMPERATURE_MAXTHRESHOLD"));
 	String appId = PropertyFileReader.getConfigProperty("AppId");
 	String cityName = PropertyFileReader.getConfigProperty("CITY_NAME");
+	static JSONObject response;
 	
 	
 	/**
@@ -59,7 +61,7 @@ public class E2EWebApiTestsClass extends TestsBaseClass {
 		queryMap.put("appid", appId);
 		queryMap.put("units", "Metric");
 		// Executing the api request to get JSON Object response
-		JSONObject response = ApiRequestExecutor.getRequestExecute(queryMap);
+		response = ApiRequestExecutor.getRequestExecute(queryMap);
 		Assert.assertEquals(response.get("cod").toString(), HttpStatusCodes.SUCCESS.getCode());
 		// fetching temperature from Response
 		int temperature_API = response.getJSONObject("main").getInt("temp");
@@ -71,27 +73,27 @@ public class E2EWebApiTestsClass extends TestsBaseClass {
 	}
 	
 	
-	@Test (enabled = false)
-	public void compare_Humidity_And_WeatherCondition_WebAndApi_For_A_GivenCity_Test() {
-		String a = "Karnal, Haryana\n" + 
-				"Condition : Clear\n" + 
-				"Wind: 4.44 KPH Gusting to 4.82 KPH\n" + 
-				"Humidity: 18%\n" + 
-				"Temp in Degrees: 29\n" + 
-				"Temp in Fahrenheit: 84".trim();
-		String [] arr = a.split(":|\\,|\\\n");
+	@Test (dependsOnMethods = "compare_NdtvWeatherTemp_And_WeatherApiTemp_For_A_GivenCity_Test")
+	public void compare_Humidity_And_WeatherCondition_WebAndApi_For_A_GivenCity_Test() throws InterruptedException {
+		weatherPageObjects.clickOnZoomButtonMap();
+		Thread.sleep(2000);
+		weatherPageObjects.clickOnDetailedWeatherDiv();
+		Thread.sleep(2000);
+		String detailedWeatherText = weatherPageObjects.getDetailedWeatherText();
+		// Spliting text to match the details
+		String [] arr = detailedWeatherText.split(":|\\,|\\\n");
+		// Storing in hashMap as key value pairs
 		HashMap<String, String> hm = new HashMap<String, String>();
 		for (int i =0;i<arr.length-1;) {
 			hm.put(arr[i], arr[i+1]);
 			i = i+2;
-			
-
 		}
-		for (Map.Entry hmp : hm.entrySet()) {
-			System.out.println(hmp.getKey().toString().trim());
-			System.out.println(hmp.getValue().toString().trim());
-		}
-		System.out.println(hm.get("Condition "));
+		String condition = response.getJSONArray("weather").getJSONObject(0).getString("main");
+		// validating weather conditions (clear, cloudy etc)
+		Assert.assertEquals(condition, hm.get("Condition ").trim());
+		
+		// More validations to follow (Humidity , wind etc
+	
 
 	}
 

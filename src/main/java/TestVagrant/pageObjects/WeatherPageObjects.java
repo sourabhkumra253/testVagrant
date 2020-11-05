@@ -19,8 +19,8 @@ public class WeatherPageObjects {
 	private By checkBoxForSearchCity = By.xpath("*//label[contains(text(),'"+city+"')]");
 	private By weatherLabelOnMap = By.xpath("//div[@class='outerContainer' and @title='Karnal']");
 	private By zoomButtonOnMap = By.xpath("//a[@title='Zoom in']");
-	private By DetailedWeatherDiv = By.xpath("//div[@class ='outerContainer' and @title='Karnal']");
-	
+	private By detailedWeatherDiv = By.xpath("//div[@class ='outerContainer' and @title='Karnal']");
+	private By detailWeatherDivText = By.xpath("//div[@class ='leaflet-popup-content']");
 	
 	public void sendKeysOnweatherPageSearchBox(String city) {
 		
@@ -43,6 +43,11 @@ public class WeatherPageObjects {
 	}
 	
 	public void clickOnDetailedWeatherDiv() {
-		driver.findElement(DetailedWeatherDiv).click();
+		driver.findElement(detailedWeatherDiv).click();
+	}
+	
+	public String getDetailedWeatherText() {
+		String detailedWeatherText = driver.findElement(detailWeatherDivText).getText();
+		return detailedWeatherText;
 	}
 }
