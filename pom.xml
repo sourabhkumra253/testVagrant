@@ -6,6 +6,22 @@
   <artifactId>TestVagrant</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
+   <build>
+    <pluginManagement>
+      <plugins>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M4</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <name>TestVagrant</name>
   <url>http://maven.apache.org</url>
@@ -13,6 +29,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+ 
 
   <dependencies>
     <dependency>
@@ -31,7 +48,7 @@
     <groupId>org.testng</groupId>
     <artifactId>testng</artifactId>
     <version>6.14.3</version>
-    <scope>test</scope>
+    <scope>compile</scope>
 </dependency>
     <dependency>
     <groupId>io.rest-assured</groupId>
