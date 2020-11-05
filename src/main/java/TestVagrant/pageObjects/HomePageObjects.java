@@ -35,6 +35,15 @@ public class HomePageObjects extends PageObjectBaseClass {
 		return newsAlertPopup;
 	}
 	
+	public By getsubMenuDots() {
+		return subMenuDots;
+	}
+	
+	public By getweatherLink() {
+		return weatherLink;
+	}
+	
+	
 	public void waitForElement(By locator) {
 		WebDriverWait wait = new WebDriverWait(this.getDriver(), 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));

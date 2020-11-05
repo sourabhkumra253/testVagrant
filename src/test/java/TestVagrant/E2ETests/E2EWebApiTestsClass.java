@@ -1,36 +1,30 @@
 package TestVagrant.E2ETests;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.json.JSONObject;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import TestVagrant.constants.Constants;
 import TestVagrant.constants.HttpStatusCodes;
 import TestVagrant.executors.ApiRequestExecutor;
-import TestVagrant.executors.WebDriverExecutor;
 import TestVagrant.pageObjects.HomePageObjects;
 import TestVagrant.pageObjects.WeatherPageObjects;
 import TestVagrant.utility.PropertyFileReader;
 import TestVagrant.utility.TemperatureComparator;
+import TestVagrant.utility.TestsBaseClass;
 
-public class E2EWebApiTestsClass {
+public class E2EWebApiTestsClass extends TestsBaseClass {
 	
-	WebDriver driver = WebDriverExecutor.getDriver();
-	HomePageObjects homePageObjects = new HomePageObjects(driver);
-	WeatherPageObjects weatherPageObjects = new WeatherPageObjects(driver);
+	HomePageObjects homePageObjects = new HomePageObjects(getDriver());
+	WeatherPageObjects weatherPageObjects = new WeatherPageObjects(getDriver());
 	int TemperatureMinThreshold = Integer.parseInt(PropertyFileReader.getConfigProperty("TEMPERATURE_MINTHRESHOLD"));
 	int TemperatureMaxThreshold = Integer.parseInt(PropertyFileReader.getConfigProperty("TEMPERATURE_MAXTHRESHOLD"));
-
+	String appId = PropertyFileReader.getConfigProperty("AppId");
+	String cityName = PropertyFileReader.getConfigProperty("CITY_NAME");
+	
+	
 	/**
 	 * E2E test case covers below steps :
 	 * 
@@ -52,7 +46,7 @@ public class E2EWebApiTestsClass {
 		homePageObjects.clickOnSubMenuDots();
 		homePageObjects.clickOnWeatherLink();
 		// Actions on Weather page
-		weatherPageObjects.sendKeysOnweatherPageSearchBox(PropertyFileReader.getConfigProperty("CITY_NAME"));
+		weatherPageObjects.sendKeysOnweatherPageSearchBox(cityName);
 		Thread.sleep(2000);
 		weatherPageObjects.clickOncheckBoxForSearchCity();
 		String temperatureFromNdtv_WEB = weatherPageObjects.getTextFromWeatherLabel().substring(0, 2);
@@ -61,12 +55,12 @@ public class E2EWebApiTestsClass {
 		
 		// Preparing queryParameters for the Get Request
 		HashMap<String, String> queryMap = new HashMap<String, String>();
-		queryMap.put("q", "karnal");
-		queryMap.put("appid", "7fe67bf08c80ded756e598d6f8fedaea");
+		queryMap.put("q", cityName);
+		queryMap.put("appid", appId);
 		queryMap.put("units", "Metric");
 		// Executing the api request to get JSON Object response
 		JSONObject response = ApiRequestExecutor.getRequestExecute(queryMap);
-		Assert.assertEquals(response.getString("cod"), HttpStatusCodes.SUCCESS.getCode());
+		Assert.assertEquals(response.get("cod").toString(), HttpStatusCodes.SUCCESS.getCode());
 		// fetching temperature from Response
 		int temperature_API = response.getJSONObject("main").getInt("temp");
 		//System.out.println("--------API " +String.valueOf(temperature_API).substring(0, 2));
@@ -77,7 +71,7 @@ public class E2EWebApiTestsClass {
 	}
 	
 	
-	@Test
+	@Test (enabled = false)
 	public void compare_Humidity_And_WeatherCondition_WebAndApi_For_A_GivenCity_Test() {
 		String a = "Karnal, Haryana\n" + 
 				"Condition : Clear\n" + 

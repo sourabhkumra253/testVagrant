@@ -20,6 +20,7 @@ public class ApiRequestExecutor {
 		Response response = requestSpecification.queryParams(queryParams).get();
 		// Parsing response as JSONObject 
 		JSONObject responseAsJson = new JSONObject(response.asString());
+		System.out.println(response.prettyPrint());
 		return responseAsJson;
 		
 	}
